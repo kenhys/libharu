@@ -497,6 +497,7 @@ HPDF_SetEncryptionMode  (HPDF_Doc           pdf,
             /* if encryption mode is specified revision-3, the version of
              * pdf file is set to 1.4
              */
+            if (pdf->pdf_version < HPDF_VER_14)
             pdf->pdf_version = HPDF_VER_14;
 
             if (key_len >= 5 && key_len <= 16)
@@ -1528,8 +1529,7 @@ LoadTTFontFromStream (HPDF_Doc         pdf,
         HPDF_FontDef  tmpdef = HPDF_Doc_FindFontDef (pdf, def->base_font);
         if (tmpdef) {
             HPDF_FontDef_Free (def);
-            HPDF_SetError (&pdf->error, HPDF_FONT_EXISTS, 0);
-            return NULL;
+            return tmpdef->base_font;
         }
 
         if (HPDF_List_Add (pdf->fontdef_list, def) != HPDF_OK) {
@@ -1607,8 +1607,7 @@ LoadTTFontFromStream2 (HPDF_Doc         pdf,
         HPDF_FontDef  tmpdef = HPDF_Doc_FindFontDef (pdf, def->base_font);
         if (tmpdef) {
             HPDF_FontDef_Free (def);
-            HPDF_SetError (&pdf->error, HPDF_FONT_EXISTS, 0);
-            return NULL;
+            return tmpdef->base_font;
         }
 
         if (HPDF_List_Add (pdf->fontdef_list, def) != HPDF_OK) {
